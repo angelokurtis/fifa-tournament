@@ -1,4 +1,4 @@
-package com.sensedia.labs.domain.match;
+package com.sensedia.labs.domain.team;
 
 import lombok.Data;
 
@@ -13,7 +13,7 @@ public class Team {
     @GeneratedValue
     private Long id;
     private String name;
-    private Integer stars;
+    private Double stars;
     private String country;
     private String league;
 }
