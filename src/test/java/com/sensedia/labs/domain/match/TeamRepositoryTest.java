@@ -62,14 +62,16 @@ public class TeamRepositoryTest {
 
   @Test
   public void getTeam() throws Exception {
-    this.mockMvc.perform(get("/teams/{teamId}", 3))
+    this.mockMvc.perform(get("/teams/{teamId}", 6))
         .andExpect(status().isOk())
         .andDo(document("get-team",
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             responseFields(
-                subsectionWithPath("name").description("Team name"),
-                subsectionWithPath("role").description("The role that this team performs on the system"),
+                subsectionWithPath("name").description("Team team name"),
+                subsectionWithPath("stars").description("Team team amount of stars"),
+                subsectionWithPath("country").description("Team team country"),
+                subsectionWithPath("league").description("The team league"),
                 subsectionWithPath("_links").description("Links to other resources")),
             responseHeaders(headerWithName("Content-Type").description("The payload type, e.g." + MediaTypes.HAL_JSON_VALUE))
         ));
