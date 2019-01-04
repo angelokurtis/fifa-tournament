@@ -7,13 +7,13 @@ phases:
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo Building the artifact...
-      - mvn compile
+      - mvn compile --quiet
   build:
     commands:
       - echo Running tests
-      - mvn test
+      - mvn test --quiet
       - echo Packaging application
-      - mvn docker:build
+      - mvn docker:build --quiet
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
