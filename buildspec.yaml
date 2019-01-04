@@ -14,7 +14,7 @@ phases:
       - mvn test --quiet
       - echo Packaging application
       - mvn package docker:build -Dmaven.test.skip=true --quiet
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - docker tag kurtis/fifa-tournament:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Pushing the Docker image "$REPOSITORY_URI:$IMAGE_TAG"...

@@ -95,7 +95,7 @@
             <configuration>
                 <images>
                     <image>
-                        <name>cateno/${project.artifactId}</name>
+                        <name>kurtis/${project.artifactId}</name>
                         <build>
                             <from>openjdk:8-jre-alpine3.7</from>
                             <entryPoint>java -jar /application/${project.build.finalName}.jar</entryPoint>
