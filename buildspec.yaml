@@ -13,7 +13,7 @@ phases:
       - echo Running tests
       - mvn test --quiet
       - echo Packaging application
-      - mvn docker:build --quiet
+      - mvn package docker:build -Dmaven.test.skip=true --quiet
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
