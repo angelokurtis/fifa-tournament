@@ -20,7 +20,10 @@ phases:
       - echo Pushing the Docker image "$REPOSITORY_URI:$IMAGE_TAG"...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"fifa-tournament-staging","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"fifa-tournament","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - cat imagedefinitions.json
 cache:
   paths:
     - /var/lib/docker/**/*
+artifacts:
+  files: imagedefinitions.json
