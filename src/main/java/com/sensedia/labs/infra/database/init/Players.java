@@ -14,6 +14,11 @@ class Players {
   private final Collection<Player> players = new ArrayList<>();
 
   Players() {
+    final Player matheus = new Player();
+    matheus.setName("Matheus");
+    matheus.setRole(Role.USER);
+    this.players.add(matheus);
+
     final Player tiago = new Player();
     tiago.setName("Tiago");
     tiago.setRole(Role.USER);
