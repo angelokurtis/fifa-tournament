@@ -3,6 +3,11 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - TASK_DEFINITION=$(aws ecs list-task-definitions --family-prefix fifa-tournament --query 'taskDefinitionArns[-1]' --output text)
+      - TASK_REVISION=$(aws ecs describe-task-definition --task-definition $TASK_DEFINITION --query 'taskDefinition.revision')
+      - NEXT_TASK_REVISION=$((TASK_REVISION+1))
+      - NEXT_TASK_DEFINITION=$(echo "$TASK_DEFINITION" | rev | cut -c 2- | rev)$NEXT_TASK_REVISION
+      - echo Next task definition $NEXT_TASK_DEFINITION...
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
@@ -21,9 +26,11 @@ phases:
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
       - printf '[{"name":"fifa-tournament","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - cat imagedefinitions.json
+      - printf '{"version":1,"Resources":[{"TargetService":{"Type":"AWS::ECS::Service","Properties":{"TaskDefinition":"%s","LoadBalancerInfo":{"ContainerName":"fifa-tournament","ContainerPort":8080}}}}]}' $NEXT_TASK_DEFINITION > appspec.json
 cache:
   paths:
     - /var/lib/docker/**/*
 artifacts:
-  files: imagedefinitions.json
+  files:
+    - imagedefinitions.json
+    - appspec.json
