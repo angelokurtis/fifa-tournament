@@ -1,0 +1,36 @@
+{
+  "containerDefinitions": [
+    {
+      "logConfiguration": {
+        "logDriver": "none"
+      },
+      "portMappings": [
+        {
+          "hostPort": 0,
+          "protocol": "tcp",
+          "containerPort": 8080
+        }
+      ],
+      "cpu": 0,
+      "memory": 512,
+      "image": "<IMAGE1_NAME>",
+      "essential": true,
+      "name": "fifa-tournament"
+    }
+  ],
+  "compatibilities": [
+    "EC2"
+  ],
+  "family": "fifa-tournament",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    }
+  ],
+  "requiresCompatibilities": [
+    "EC2"
+  ]
+}
