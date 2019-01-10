@@ -5,22 +5,23 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - echo Building the artifact...
-      - mvn compile --quiet
+      - COMMIT=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
+      - echo Building the artifact version "$VERSION" on commit "$COMMIT"...
+      - mvn compile -q
   build:
     commands:
       - echo Running tests
-      - mvn test --quiet
+      - mvn test -q
       - echo Packaging application
-      - mvn package docker:build -Dmaven.test.skip=true --quiet
-      - docker tag kurtis/fifa-tournament:latest $REPOSITORY_URI:$IMAGE_TAG
+      - mvn package docker:build -DskipTests -q
+      - docker tag kurtis/fifa-tournament:latest $REPOSITORY_URI:$VERSION
   post_build:
     commands:
-      - echo Pushing the Docker image "$REPOSITORY_URI:$IMAGE_TAG"...
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Pushing the Docker image "$REPOSITORY_URI:$VERSION"...
+      - docker push $REPOSITORY_URI:$VERSION
       - echo Writing image definitions file...
-      - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
+      - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$VERSION > imageDetail.json
 cache:
   paths:
     - /var/lib/docker/**/*
