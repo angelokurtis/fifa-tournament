@@ -88,46 +88,39 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-            <version>${fabric8-docker-plugin.version}</version>
-            <configuration>
-                <images>
-                    <image>
-                        <name>kurtis/${project.artifactId}</name>
-                        <build>
-                            <from>openjdk:8-jre-alpine3.7</from>
-                            <entryPoint>java -jar /application/${project.build.finalName}.jar</entryPoint>
-                            <assembly>
-                                <basedir>/application</basedir>
-                                <descriptorRef>artifact</descriptorRef>
-                                <inline>
-                                    <id>assembly</id>
-                                    <files>
-                                        <file>
-                                            <source>target/${project.build.finalName}.jar</source>
-                                        </file>
-                                    </files>
-                                </inline>
-                            </assembly>
-                            <tags>
-                                <tag>latest</tag>
-                                <tag>${project.version}</tag>
-                            </tags>
-                            <ports>
-                                <port>9090</port>
-                            </ports>
-                        </build>
-                        <run>
-                            <namingStrategy>alias</namingStrategy>
-                        </run>
-                        <alias>${project.build.finalName}
-                        </alias>
-                    </image>
-                </images>
-            </configuration>
-        </plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>1.6.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>dockerBuild</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <from>
+                        <image>openjdk:8-jre-alpine</image>
+                    </from>
+                    <to>
+                        <image>kurtis/${project.artifactId}:${project.version}</image>
+                    </to>
+                    <container>
+                        <ports>
+                            <port>8080</port>
+                        </ports>
+                        <jvmFlags>
+                            <jvmFlag>-noverify</jvmFlag>
+                            <jvmFlag>-XX:TieredStopAtLevel=1</jvmFlag>
+                            <jvmFlag>-XX:+UnlockExperimentalVMOptions</jvmFlag>
+                            <jvmFlag>-XX:+UseCGroupMemoryLimitForHeap</jvmFlag>
+                        </jvmFlags>
+                    </container>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
